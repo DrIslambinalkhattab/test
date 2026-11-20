@@ -94,6 +94,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .eq{padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--panel2);display:flex;flex-direction:column;gap:8px}.eq .r{display:flex;gap:8px}
 @media(max-width:980px){.hero{grid-template-columns:1fr;padding:26px}.ringbox{order:-1}.ringbox svg{max-width:190px}h1{font-size:36px}}
 @media(max-width:560px){.t{width:calc(33.3% - 8px)}.times{width:100%}}
+.ringbox,.dtc{cursor:pointer}.ringbox svg{transition:filter .4s}.ringbox:hover svg{filter:drop-shadow(0 0 14px color-mix(in srgb,var(--ac) 55%,transparent))}.dtc{transition:.3s}.dtc:hover{border-color:var(--ac);color:var(--tx)}
+.cv{width:100%;display:none;background:var(--panel);border:1px solid var(--line);border-radius:30px;box-shadow:var(--sh);overflow:hidden}
+body.ck .cv{display:block;animation:cvin .5s cubic-bezier(.2,.8,.2,1)}body.ck .hero{display:none}
+.cvh{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}.cvh b{font-size:15px}.cvh .btn{padding:8px 14px}
+.cv iframe{display:block;width:100%;height:clamp(620px,84vh,880px);border:0;background:transparent}
+@keyframes cvin{from{opacity:0;transform:translateY(14px) scale(.985)}}
 </style>
 </head>
 <body>
@@ -101,6 +107,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
   <div class="pill" id="pill"></div>
   <div class="tw"><div><div class="times" id="times"></div></div></div>
   <section class="hero" id="hero"></section>
+  <section class="cv" id="cv"><div class="cvh"><button class="btn" id="cvb"><svg class="i" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg> رجوع للوحة</button><b>الساعة</b><span style="width:100px"></span></div><iframe id="cf" title="الساعة" allow="fullscreen" allowfullscreen></iframe></section>
 </div>
 <button class="gear" id="gear" aria-label="تخصيص"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 <div class="ov" id="ov"></div>
@@ -160,11 +167,16 @@ function renderHero(){if(qi<0||qi>=S.quotes.length)qi=pickQ();const h=cairoParts
  const dt=new Intl.DateTimeFormat('ar-EG-u-nu-latn',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'}).format(new Date()),hj=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{timeZone:TZ,day:'numeric',month:'long',year:'numeric'}).format(new Date());
  const done=Object.keys(PN).filter(k=>cur.today[k]<new Date()).length;const wc=W?WC(W.c):['—','cloud'];
  const wx=S.weather?`<div class="temp"><div class="n">${W?Math.round(W.t):'--'}<sup>°C</sup></div><p>الطقس الآن<strong>${wc[0]}${W?` · تُحس ${Math.round(W.f)}°`:''}</strong>${W?`<span>العظمى ${Math.round(W.hi)}° · الصغرى ${Math.round(W.lo)}°</span>`:'<span>يتطلب اتصالًا بالإنترنت</span>'}</p></div>`:'';
- $('hero').innerHTML=`<span class="chip dtc">${I('target')}${esc(dt)} · ${esc(hj)}</span><div class="main"><div class="chips">${S.chipText?`<span class="chip g">${I('bolt')}${esc(S.chipText)}</span>`:''}<span class="chip">${esc(S.place)}</span></div><h1>${esc(gr)}</h1>${wx}
+ $('hero').innerHTML=`<span class="chip dtc" title="فتح الساعة">${I('target')}${esc(dt)} · ${esc(hj)}</span><div class="main"><div class="chips">${S.chipText?`<span class="chip g">${I('bolt')}${esc(S.chipText)}</span>`:''}<span class="chip">${esc(S.place)}</span></div><h1>${esc(gr)}</h1>${wx}
  <div class="note"><div class="ico">${I(S.note.icon)}</div><div style="flex:1"><b>${esc(S.note.title)}</b><p>${esc(S.note.text)}</p><div class="seg">${Object.keys(PN).map((k,i)=>`<i class="${i<done?'f':''}"></i>`).join('')}</div></div></div></div>
- <div class="ringbox"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="84" fill="none" stroke="color-mix(in srgb,var(--ac) 14%,transparent)" stroke-width="12"/><circle id="rg" cx="100" cy="100" r="84" fill="none" stroke="var(--ac)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${traw}" stroke-dashoffset="${traw}" style="transition:stroke-dashoffset 1s"/></svg><div class="c"><small>التالي</small><div class="big" id="rn">${PN[cur.nx.k]}</div><small id="rp">0%</small>${W&&S.weather?`<small style="margin-top:6px">${I(wc[1])} ${W.h}% رطوبة · ${Math.round(W.w)} كم/س</small>`:''}</div></div>
+ <div class="ringbox" title="فتح الساعة"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="84" fill="none" stroke="color-mix(in srgb,var(--ac) 14%,transparent)" stroke-width="12"/><circle id="rg" cx="100" cy="100" r="84" fill="none" stroke="var(--ac)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${traw}" stroke-dashoffset="${traw}" style="transition:stroke-dashoffset 1s"/></svg><div class="c"><small>التالي</small><div class="big" id="rn">${PN[cur.nx.k]}</div><small id="rp">0%</small>${W&&S.weather?`<small style="margin-top:6px">${I(wc[1])} ${W.h}% رطوبة · ${Math.round(W.w)} كم/س</small>`:''}</div></div>
  <div class="qp"><div class="qh"><span class="qi">${I('quote')}</span><div><b>اقتباس</b><small id="qc"></small></div><button class="qn" id="qn" aria-label="التالي">${I('shuf')}</button></div><div class="qb" id="qb">${qHTML(S.quotes[qi])}</div><div class="qf"><i id="qp"></i></div></div>`;
  $('qn').onclick=nextQ;cnt(); render()}
+function openClock(){const f=$('cf');if(!f.getAttribute('src'))f.src='pomodoro.html?embed=1&t='+S.theme;document.body.classList.add('ck');scrollTo({top:0,behavior:'smooth'})}
+const closeClock=()=>document.body.classList.remove('ck');
+$('hero').addEventListener('click',e=>{if(e.target.closest('.ringbox,.dtc'))openClock()});
+$('cvb').onclick=closeClock;
+addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('ck'))closeClock()});
 $('pill').onclick=()=>{S.showTimes=!S.showTimes;save();document.body.classList.toggle('tm',S.showTimes)};
 document.body.classList.toggle('tm',!!S.showTimes);
 const tick=()=>{render();renderTimes();const f=$('qp');if(f)f.style.width=Math.min(100,(Date.now()-qAt)/(S.qEvery*1e3)*100)+'%';if(Date.now()-qAt>=S.qEvery*1e3)nextQ();const r=$('rn');if(r)r.textContent=PN[cur.nx.k]};
@@ -186,7 +198,7 @@ function drawer(){const tb=(k,t)=>`<button class="${tab===k?'a':''}" data-tab="$
  if(tab==='ot')b=`<div class="sw">إظهار الطقس ودرجة الحرارة<input type="checkbox" data-s="weather" ${S.weather?'checked':''} style="width:auto"></div><div class="sw">الوضع الفاتح<input type="checkbox" data-s="light" ${S.theme==='light'?'checked':''} style="width:auto"></div>
  <div class="f">النسخ الاحتياطي</div><div class="row"><button class="btn p" data-ex>${I('down')} أخذ نسخة</button><label class="btn">${I('up')} استرجاع<input type="file" accept=".json" data-im hidden></label></div><button class="btn x" data-rs>إعادة الضبط</button>`;
  $('dr').innerHTML=`<div class="dh"><h2>تخصيص اللوحة</h2><button data-close>${I('x')}</button></div><div class="tabs">${tb('txt','النصوص')}${tb('pr','الصلوات')}${tb('qt','الاقتباسات')}${tb('ot','أخرى')}</div><div class="db">${b}</div>`}
-const apply=()=>{save();document.documentElement.dataset.theme=S.theme;renderHero();renderTimes()};
+const apply=()=>{save();{const w=$('cf').contentWindow;w&&w.postMessage({t:S.theme},'*')}document.documentElement.dataset.theme=S.theme;renderHero();renderTimes()};
 const dr=$('dr');
 dr.addEventListener('input',e=>{const t=e.target,d=t.dataset;
  if(d.s){S[d.s]=t.type==='checkbox'?t.checked:(d.s==='asr'?+t.value:t.value);if(d.s==='light')S.theme=t.checked?'light':'dark'}

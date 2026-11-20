@@ -103,7 +103,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ac);outline-off
 .tabs button,.sb,.pb{display:inline-flex;align-items:center;justify-content:center;gap:8px}.tabs svg{font-size:13px;pointer-events:none}.st button svg{font-size:11px;pointer-events:none}.sb svg{font-size:14px}
 @media (max-width:620px){.tabs svg{display:none}}
 .panel{width:100%;max-width:1040px;align-self:center}
+.emb body{background:transparent}.emb .brand,.emb #th,.emb .keys{display:none}.emb header{justify-content:flex-start}.emb .app{padding:14px 16px 24px;gap:20px}
 /* وضع ملء الشاشة: الساعة فقط */
+.fs body{background:var(--bg)!important}
 .fs header,.fs .tabs,.fs .panel,.fs .keys,.fs .lbl,.fs .bar,.fs .ctl{display:none!important}
 .fs body::before,.fs body::after{opacity:.07}
 .fs .app{max-width:none;min-height:100vh;min-height:100dvh;padding:0;gap:0;justify-content:center}
@@ -174,6 +176,8 @@ try{const v=JSON.parse(localStorage.getItem('waqti')||'{}');
  if(v.cd){S.cd.tot=S.cd.rem=v.cd}S.h12=!!v.h12;if(v.t)document.documentElement.dataset.theme=v.t}catch(e){}
 const save=()=>{try{const p=S.pomo;localStorage.setItem('waqti',JSON.stringify({p:{f:p.f,s:p.s,l:p.l,auto:p.auto},cd:S.cd.tot,h12:S.h12,t:document.documentElement.dataset.theme||''}))}catch(e){}};
 
+{const Q=new URLSearchParams(location.search);if(Q.get('embed'))document.documentElement.classList.add('emb');if(Q.get('t'))document.documentElement.dataset.theme=Q.get('t')}
+addEventListener('message',e=>{if(e.data&&e.data.t)document.documentElement.dataset.theme=e.data.t});
 /* flip digits */
 const CK=$('#clock'),D=[];
 CK.innerHTML='<div class="grp gh" data-l="ساعات"></div><div class="sep"><span></span><span></span></div><div class="grp gm" data-l="دقائق"></div><div class="sep"><span></span><span></span></div><div class="grp gs" data-l="ثواني"></div>';
